@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 class="text-center">Fight Details</h1>
+<div class="col-4">
+    <!-- <p class="strong">Date</p>
+    <p id="date"></p>
+    <p class="strong">Venue</p>
+    <p id="venue"></p>
+    <p class="strong">Title Fight</p>
+    <p id="title_fight"></p>
+    <p class="strong">Sex</p>
+    <p id="sex"></p> -->
+    {{context|safe}}
+    <!-- <iframe src={{red_shap|safe}}></iframe>
+    <iframe src={{blue_shap|safe}}></iframe> -->
+    {% include red_shap %}
+    {% include blue_shap %}
+    {{red_shap|safe}}
+    {{blue_shap|safe}}
+</div>
+
+<!--
+    I want three column 'tale of the tape' here
+    - red corner
+    - shared stats
+    - blue corner
+
+
+    I want a three column prediction underneath that
+    - red corner win probability, and lose probability directly underneath it
+    - draw probability
+    - blue corner win probability, and lose probability directly underneath it
+    Since the model predicts only the probability of a red corner win, we're
+        going to put the fight into the model in reverse to get the probabilities going the
+        other way and see if there's a significant difference in those values.
+    
+    
+
+
+-->
+{% endblock %}

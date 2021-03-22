@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Enter Fight Details</h1>
+<form method='POST' action="/fight_deets">
+    <!-- NEED TO ADD ADDITIONAL VALUES --
+        [x] Boxrec event ID
+        [x] fighter first and last names of both fighters
+        [x] birthdays of both fighters
+        [x] debut date of both fighters
+        [x] remove years active
+        [x] remove age at fight time
+    -->
+    <div class="row">
+        <div class="col mb-2">
+            <input name="red-br-id" type="text" class="form-control form-control-sm" placeholder="Red Corner Boxrec ID" aria-label="Red Boxrec ID"/>
+        </div>
+        <div class="col mb-2">
+            <input name="red-first-name" type="text" class="form-control form-control-sm" placeholder="Red First Name" aria-label="Red First Name">
+        </div>
+        <div class="col mb-2">
+            <input name="red-last-name" type="text" class="form-control form-control-sm" placeholder="Red Last Name" aria-label="Red Last Name">
+        </div>
+        <div class="col mb-2">
+            <input name="blue-br-id" type="text" class="form-control form-control-sm" placeholder="Blue Corner Boxrec ID" aria-label="Blue Boxrec ID"/>
+        </div>
+        <div class="col mb-2">
+            <input name="blue-first-name" type="text" class="form-control form-control-sm" placeholder="Blue First Name" aria-label="Blue First Name">
+        </div>
+        <div class="col mb-2">
+            <input name="blue-last-name" type="text" class="form-control form-control-sm" placeholder="Blue Last Name" aria-label="Blue Last Name">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col mb-2">
+            <input name="fight-id" type="text" class="form-control form-control-sm" placeholder="Boxrec Event ID" aria-label="fight-id"/>
+        </div>
+        <div class="col mb-2">
+            <input name="title-fight" type="checkbox" class="form-control form-check-input form-check-inline" aria-label="title-fight"/>
+            <label class="form-check-label" for="title-fight">Title Fight</label> <!-- might have a problem with the two class labels here-->
+        </div>
+        <div class="col mb-2">
+            <input name="sex" type="checkbox" class="form-control form-check-input form-check-inline" aria-label="sex" checked>
+            <label class="form-check-label" for="sex">Male</label>
+        </div>
+        <div class="col-6 mb-2">
+            <select name="weight-class" class="form-control form-select form-select-sm" aria-label="weight class select">
+                <option selected>Weight Class</option>
+                <option value="1">Light Flyweight</option>
+                <option value="2">Flyweight</option>
+                <option value="3">Super Flyweight</option>
+                <option value="4">Bantamweight</option>
+                <option value="5">Super Bantamweight</option>
+                <option value="6">Featherweight</option>
+                <option value="7">Super Featherweight</option>
+                <option value="8">Lightweight</option>
+                <option value="9">Super Lightweight</option>
+                <option value="10">Welterweight</option>
+                <option value="11">Super Welterweight</option>
+                <option value="12">Middleweight</option>
+                <option value="13">Super Middleweight</option>
+                <option value="14">Light Heavyweight</option>
+                <option value="15">Cruiserweight</option>
+                <option value="16">Heavyweight</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col mb-2">
+            <input name="venue" type="text" class="form-control form-control-sm" placeholder="Venue" aria-label="venue"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col mb-2">
+            <input name="red-height" type="text" class="form-control form-control-sm" placeholder="Red height in cm" aria-label="Red height"/>
+        </div>
+        <div class="col mb-2">
+            <input name="blue-height" type="text" class="form-control form-control-sm" placeholder="Blue height in cm" aria-label="Blue height"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col mb-2">
+            <div class="form-group row">
+                <label class="col-2 col-form-label">Red Stance</label>
+                <div class="col">
+                    <select name="red-stance" class="form-control form-select form-select-sm" aria-label="red stance select">
+                        <option value="0" selected>Orthodox</option>
+                        <option value="1">Southpaw</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-2">
+            <div class="form-group row">
+                <label class="col-2 col-form-label">Blue Stance</label>
+                <div class="col">
+                    <select name="blue-stance" class="form-control form-select form-select-sm" aria-label="blue stance select">
+                        <option value="0" selected>Orthodox</option>
+                        <option value="1">Southpaw</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col mb-2">
+            <input name="red-nationality" type="text" class="form-control form-control-sm" placeholder="Red nationality" aria-label="Red nationality"/>
+        </div>
+        <div class="col mb-2">
+            <input name="blue-nationality" type="text" class="form-control form-control-sm" placeholder="Blue nationality" aria-label="Blue nationality"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col mb-2">
+            <input name="red-reach" type="text" class="form-control form-control-sm" placeholder="Red reach in cm" aria-label="Red reach"/>
+        </div>
+        <div class="col mb-2">
+            <input name="blue-reach" type="text" class="form-control form-control-sm" placeholder="Blue reach in cm" aria-label="Blue reach"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col mb-2">
+            <div class="form-group row">
+                <label class="col-2 col-form-label" for="red-born">Red Born</label>
+                <div class="col-10">
+                    <input name="red-born" type="date" class="form-control form-control-sm" aria-label="Red Born"/>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-2">
+            <div class="form-group row">
+                <label class="col-2 col-form-label" for="blue-born">Blue Born</label>
+                <div class="col-10">
+                    <input name="blue-born" type="date" class="form-control form-control-sm" aria-label="Blue Born"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col mb-2">
+            <div class="form-group row">
+                <label class="col-2 col-form-label" for="red-born">Red Debut</label>
+                <div class="col-10">
+                    <input name="red-debut" type="date" class="form-control form-control-sm" aria-label="Red Debut"/>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-2">
+            <div class="form-group row">
+                <label class="col-2 col-form-label" for="red-born">Blue Debut</label>
+                <div class="col-10">
+                    <input name="blue-debut" type="date" class="form-control form-control-sm" aria-label="Blue Debut"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col mb-2">
+            <div class="row mb-2">
+                <div class="col-4">
+                    <p class="col-form-label">Red Record at Fight Time</p>
+                </div>
+                <div class="col">
+                    <input name="red-wins" type="text" class="form-control form-control-sm" placeholder="Wins" aria-label="Red wins"/>
+                </div>
+                <div class="col">
+                    <input name="red-losses" type="text" class="form-control form-control-sm" placeholder="Losses" aria-label="Red losses"/>
+                </div>
+                <div class="col">
+                    <input name="red-draws" type="text" class="form-control form-control-sm" placeholder="Draws" aria-label="Red draws"/>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-2">
+            <div class="row mb-2">
+                <div class="col-4">
+                    <p class="col-form-label">Blue Record at Fight Time</p>
+                </div>
+                <div class="col">
+                    <input name="blue-wins" type="text" class="form-control form-control-sm" placeholder="Wins" aria-label="Blue wins"/>
+                </div>
+                <div class="col">
+                    <input name="blue-losses" type="text" class="form-control form-control-sm" placeholder="Losses" aria-label="Blue losses"/>
+                </div>
+                <div class="col">
+                    <input name="blue-draws" type="text" class="form-control form-control-sm" placeholder="Draws" aria-label="Blue draws"/>
+                </div> 
+            </div>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <button type="submit" class="btn btn-primary mb-2">Submit</button>
+    </div>
+</form>
+<p class="lead text-center">Use the Boxrec Events Scheduler below to find the fight you want and to copy the fighter details into the form.</p>
+<!-- <iframe src="https://boxrec.com/en/schedule?s%5BcountryCode%5D=&s%5Bdivision%5D=&s%5Bmedia%5D=&s%5Bsport%5D=proboxing&c_go=" title="Current Fight Schedule" height="500", width="100%"></iframe> -->
+
+{% endblock %}

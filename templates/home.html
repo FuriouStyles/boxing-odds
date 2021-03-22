@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Hello World!</h1>
+<h1>Current Fight Schedule</h1>
+<h3>Taken from proboxingingodds.com</h3>
+<div class="table-responsive">
+    <table class="table table-sm table-hover">
+        <thead class="table-dark align-middle font-size">
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Fighter</th>
+                <th scope="col">5Dimes</th>
+                <th scope="col">William H.</th>
+                <th scope="col">Bet365</th>
+                <th scope="col">Bovada</th>
+                <th scope="col">BookMaker</th>
+                <th scope="col">BetDSI</th>
+                <th scope="col">Intertops</th>
+                <th scope="col">SportBet</th>
+                <th scope="col">Pinnacle</th>
+                <th scope="col">SportsInt</th>
+                <th scope="col">Betonline</th>
+                <th scope="col">Sportsbook</th>
+                <th scope="col">Win Proba</th>  
+            </tr>
+        </thead>
+        {% for table in odds_tables %}
+        <tbody>
+            {% set fightid1 = table['fight_id'][0] %}
+            <tr onclick="window.location='templates?fightid={{ fightid1 }}'" class='red_corner'>
+                <td>{{ table['Date'][0] }}</td>
+                <td>{{ table['Fighter'][0] }}</td>
+                <td>{{ table['Fivedimes'][0] }}</td>
+                <td>{{ table['WilliamH'][0] }}</td>
+                <td>{{ table['Bet365'][0] }}</td>
+                <td>{{ table['Bovada'][0] }}</td>
+                <td>{{ table['BookMaker'][0] }}</td>
+                <td>{{ table['BetDSI'][0] }}</td>
+                <td>{{ table['Intertops'][0] }}</td>
+                <td>{{ table['SportBet'][0] }}</td>
+                <td>{{ table['Pinnacle'][0] }}</td>
+                <td>{{ table['SportsInt'][0] }}</td>
+                <td>{{ table['BetOnline'][0] }}</td>
+                <td>{{ table['Sportsbook'][0] }}</td>
+                {% if table['modeled'][0] == False %}
+                    <td class="rowspan=2">PUT BUTTON HERE</td> 
+                {% else %}
+                    <td>{{ table['modeled'][0] | safe }}</td>
+                {% endif %}
+            </tr>
+            {% set fightid2 = table['fight_id'][1] %}
+            <tr onclick="window.location='templates?fightid={{ fightid2 }}'" class='blue_corner'>
+                <td>{{ table['Time'][1] }}</td>
+                <td>{{ table['Fighter'][1] }}</td>
+                <td>{{ table['Fivedimes'][1] }}</td>
+                <td>{{ table['WilliamH'][1] }}</td>
+                <td>{{ table['Bet365'][1] }}</td>
+                <td>{{ table['Bovada'][1] }}</td>
+                <td>{{ table['BookMaker'][1] }}</td>
+                <td>{{ table['BetDSI'][1] }}</td>
+                <td>{{ table['Intertops'][1] }}</td>
+                <td>{{ table['SportBet'][1] }}</td>
+                <td>{{ table['Pinnacle'][1] }}</td>
+                <td>{{ table['SportsInt'][1] }}</td>
+                <td>{{ table['BetOnline'][1] }}</td>
+                <td>{{ table['Sportsbook'][1] }}</td>
+                {% if table['modeled'][1] == False %}
+                    <td></td> 
+                {% else %}
+                    <td>{{ table['modeled'][1] | safe }}</td>
+                {% endif %}
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
