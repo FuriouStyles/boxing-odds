@@ -27,7 +27,15 @@
         {% for table in odds_tables %}
         <tbody>
             {% set fightid1 = table['fight_id'][0] %}
-            <tr onclick="window.location='templates?fightid={{ fightid1 }}'" class='red_corner'>
+            {% set date = table['Date'][0] %}
+            {% set time = table['Time'][0] %}
+            {% set red = table['Fighter'][0] %}
+            {% set blue = table['Fighter'][1] %}
+            {% if table['modeled'][0] == False %}
+            <tr onclick="window.location='fight_deets?fightid={{ fightid1 }}&modeled=False'" class='red_corner'>
+            {% else %}
+            <tr onclick="window.location='fight_deets?fightid={{ fightid1 }}&modeled=True'" class='red_corner'>
+            {% endif %}
                 <td>{{ table['Date'][0] }}</td>
                 <td>{{ table['Fighter'][0] }}</td>
                 <td>{{ table['Fivedimes'][0] }}</td>
@@ -48,8 +56,12 @@
                     <td>{{ table['modeled'][0] | safe }}</td>
                 {% endif %}
             </tr>
-            {% set fightid2 = table['fight_id'][1] %}
-            <tr onclick="window.location='templates?fightid={{ fightid2 }}'" class='blue_corner'>
+            <!-- the generated fightid is ALWAYS red corner + blue corner + date -->
+            {% if table['modeled'][1] == False %}
+            <tr onclick="window.location='fight_deets?fightid={{ fightid1 }}&modeled=False'" class='red_corner'>
+            {% else %}
+            <tr onclick="window.location='fight_deets?fightid={{ fightid1 }}&modeled=True'" class='red_corner'>
+            {% endif %}
                 <td>{{ table['Time'][1] }}</td>
                 <td>{{ table['Fighter'][1] }}</td>
                 <td>{{ table['Fivedimes'][1] }}</td>

@@ -14,14 +14,10 @@ import db_handler
 head={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36'}
 
 def make_soup():
-    print('making soup')
     sess = requests.Session()
     req = sess.get("https://www.proboxingodds.com/", headers=head)
     soup = bs(req.content, features='lxml')
     return soup
-
-# soup = make_soup()
-# print(soup)
 
 def parse_proboxingodds(soup):
     """
@@ -31,9 +27,7 @@ def parse_proboxingodds(soup):
 
     Note: The date is gathered elsewhere
     """
-    # url = 'https://www.proboxingodds.com/'
     tables = []
-    # dates = soup.find_all('div', attrs={'class':'table-header'})
     site = pd.read_html(str(soup))
     for idx, table in enumerate(site):
         if idx == 0:
@@ -45,7 +39,7 @@ def parse_proboxingodds(soup):
             sliced['WilliamH'] = sliced['William\xa0H.']
             sliced['SportsInt'] = sliced['SportsInt.']
             sliced.drop(columns=['Props', 'Props.1', 'Props.2', '5Dimes', 'William\xa0H.', 'SportsInt.'], inplace=True)
-            sliced['last_updated_date'] = datetime.datetime.now()
+            sliced['last_updated'] = datetime.datetime.now()
             for i in sliced.columns.to_list()[2:-1]:
                 sliced[i] = sliced[i].apply(lambda x: remove_arrows(x))
                 sliced[i] = sliced[i].apply(lambda x: amer_to_dec(x))
@@ -130,50 +124,12 @@ def impute_fightID(fight):
     red = fight.at[0, 'Fighter']
     blue = fight.at[1, 'Fighter']
     date = fight['Date'][0]
-    fight_id_red = red + blue + date
-    fight_id_blue = blue + red + date
-    fight_id_red = fight_id_red.strip('-,').replace(' ', '')
-    fight_id_blue = fight_id_blue.strip('-,').replace(' ', '')
-    fight.at[0, 'fight_id'] = fight_id_red
-    fight.at[1, 'fight_id'] = fight_id_blue
+    fight_id = red + blue + date
+    fight_id = fight_id.strip('-,').replace(' ', '')
+    fight.at[0, 'fight_id'] = fight_id
+    fight.at[1, 'fight_id'] = fight_id
 
     return fight
-
-
-def table_to_html(table):
-    """
-    Converts a pandas dataframe into an HTML table.
-
-    Input: Pandas DataFrame
-    Output: HTML Table containing all the data in the DataFrame
-    """
-    return table.to_html(classes = 'odds_table')
-
-# def check_db_for_models(fight_odds):
-#     """
-#     Checks the database for the existence of each fight in the table
-#     scraped from proboxingodds. If the fight exists in the table, the 
-#     data is retrieved and stored in the DataFrame that will be displayed
-#     on the home page. If the fight does not exist, a button will be added
-#     in the prediction cells to add the data.
-
-#     Input: a list of tables scraped from proboxingodds.
-#     Output: a combined Pandas DataFrame with the fights scraped from proboxingodds
-#             and the data pulled from the database, if it exists.
-#     """
-#     query = """
-#         SELECT fightID from fights
-#             WHERE fightID = {}
-#     """
-    
-#     fight_odds['modeled'] = None
-#     for i in range(len(fight_odds)):
-#         if len(db_handler.engine.execute(query.format(fight_odds.at[i,'fight_id']))) > 0:
-#             fight_odds['modeled'] = True
-#         else:
-#             fight_odds['modeled'] = False
-    
-#     return fight_odds
 
 def gen_random_fightID():
     """

@@ -3,37 +3,41 @@
 <h1>Enter Fight Details</h1>
 <form method='POST' action="/fight_deets">
     <!-- NEED TO ADD ADDITIONAL VALUES --
-        [x] Boxrec event ID
+        [x] Boxrec event ID >>>>> change this to the fight_id
         [x] fighter first and last names of both fighters
         [x] birthdays of both fighters
         [x] debut date of both fighters
         [x] remove years active
         [x] remove age at fight time
+        [x] add only a single name field instead of first and last to stay consistent with proboxingodds
+        [x] add date and time fields as read only
+
     -->
     <div class="row">
         <div class="col mb-2">
             <input name="red-br-id" type="text" class="form-control form-control-sm" placeholder="Red Corner Boxrec ID" aria-label="Red Boxrec ID"/>
         </div>
-        <div class="col mb-2">
+        <!-- <div class="col mb-2">
             <input name="red-first-name" type="text" class="form-control form-control-sm" placeholder="Red First Name" aria-label="Red First Name">
-        </div>
+        </div> -->
         <div class="col mb-2">
-            <input name="red-last-name" type="text" class="form-control form-control-sm" placeholder="Red Last Name" aria-label="Red Last Name">
+            <input name="red-name" readonly type="text" class="form-control-plaintext form-control-sm" value="{{ red }}" aria-label="Red Last Name"/>
         </div>
         <div class="col mb-2">
             <input name="blue-br-id" type="text" class="form-control form-control-sm" placeholder="Blue Corner Boxrec ID" aria-label="Blue Boxrec ID"/>
         </div>
-        <div class="col mb-2">
+        <!-- <div class="col mb-2">
             <input name="blue-first-name" type="text" class="form-control form-control-sm" placeholder="Blue First Name" aria-label="Blue First Name">
-        </div>
+        </div> -->
         <div class="col mb-2">
-            <input name="blue-last-name" type="text" class="form-control form-control-sm" placeholder="Blue Last Name" aria-label="Blue Last Name">
+            <input name="blue-name" readonly type="text" class="form-control-plaintext form-control-sm" value="{{ blue }}" aria-label="Blue Last Name"/>
         </div>
     </div>
     <div class="row">
-        <div class="col mb-2">
-            <input name="fight-id" type="text" class="form-control form-control-sm" placeholder="Boxrec Event ID" aria-label="fight-id"/>
-        </div>
+        <!-- <label for="fight-id" class="col-form-label">Fight ID: </label> -->
+        <!-- <div class="col mb-2"> -->
+        <input name="fight-id" readonly class="visually-hidden" value="{{ fight_id }}" aria-label="fight-id"/>
+        <!-- </div> -->
         <div class="col mb-2">
             <input name="title-fight" type="checkbox" class="form-control form-check-input form-check-inline" aria-label="title-fight"/>
             <label class="form-check-label" for="title-fight">Title Fight</label> <!-- might have a problem with the two class labels here-->
@@ -41,6 +45,12 @@
         <div class="col mb-2">
             <input name="sex" type="checkbox" class="form-control form-check-input form-check-inline" aria-label="sex" checked>
             <label class="form-check-label" for="sex">Male</label>
+        </div>
+        <div class="col mb-2">
+            <input name="date" readonly class="form-control-plaintext form-control-sm" value="{{ date }}">
+        </div>
+        <div class="col mb-2">
+            <input name="time" readonly class="form-control-plaintext form-control-sm" value="{{ time }}">
         </div>
         <div class="col-6 mb-2">
             <select name="weight-class" class="form-control form-select form-select-sm" aria-label="weight class select">

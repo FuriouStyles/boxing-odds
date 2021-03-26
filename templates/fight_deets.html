@@ -1,23 +1,75 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1 class="text-center">Fight Details</h1>
-<div class="col-4">
-    <!-- <p class="strong">Date</p>
-    <p id="date"></p>
-    <p class="strong">Venue</p>
-    <p id="venue"></p>
-    <p class="strong">Title Fight</p>
-    <p id="title_fight"></p>
-    <p class="strong">Sex</p>
-    <p id="sex"></p> -->
-    {{context|safe}}
-    <!-- <iframe src={{red_shap|safe}}></iframe>
-    <iframe src={{blue_shap|safe}}></iframe> -->
-    {% include red_shap %}
-    {% include blue_shap %}
-    {{red_shap|safe}}
-    {{blue_shap|safe}}
+<h1 class="col text-center">Fight Details</h1>
+<div class="row">
+    <div class="col text-center" id="red">
+        <h3>Red Corner</h3>
+        <h5>Name</h5>
+        <p>{{ red['name'] }}</p>
+        <h5>Boxrec ID</h5>
+        <p>{{ red['br_id'] }}</p>
+        <h5>Nationality</h5>
+        <p>{{ red['nationality'] }}</p>
+        <h5>Height</h5>
+        <p>{{ red['height_cm'] }}</p>
+        <h5>Reach</h5>
+        <p>{{ red['reach_cm'] }}</p>
+        <h5>Debut</h5>
+        <p>{{ red['debut'] }}</p>
+        <h5>Stance</h5>
+        <p>{{ red['stance'] }}</p>
+        <h5>Record</h5>
+        <p>{{ red['wins'] }} - {{ red['losses'] }} - {{ red['draws'] }}</p>        
+    </div>
+    <div class="col-1 text-center" id="fight-details">
+        <h5>Date</h5>
+        <p>{{ date }}</p>
+        <h5>Time</h5>
+        <p>{{ time }} UTC</p>
+        <h5>Venue</h5>
+        <p>{{ fight['venue'] }}</p>
+        <h5>Weight Class</h5>
+        <p>{{ fight['weight_class'] }}</p>
+        <h5>Title Fight</h5>
+        {% if fight['title_fight'] == 1 %}
+            <p>True</p>
+        {% else %} 
+            <p>False</p>
+        {% endif %}
+    </div>
+    <div class="col-5 text-center" id="blue">
+        <h3>Blue Corner</h3>
+        <h5>Name</h5>
+        <p>{{ blue['name'] }}</p>
+        <h5>Boxrec ID</h5>
+        <p>{{ blue['br_id'] }}</p>
+        <h5>Nationality</h5>
+        <p>{{ blue['nationality'] }}</p>
+        <h5>Height</h5>
+        <p>{{ blue['height_cm'] }}</p>
+        <h5>Reach</h5>
+        <p>{{ blue['reach_cm'] }}</p>
+        <h5>Debut</h5>
+        <p>{{ blue['debut'] }}</p>
+        <h5>Stance</h5>
+        <p>{{ blue['stance'] }}</p>
+        <h5>Record</h5>
+        <p>{{ blue['wins'] }} - {{ blue['losses'] }} - {{ blue['draws'] }}</p>
+    </div>
+</div>
+<div class="row text-center">
+    <h5>Modeling</h5>
+</div>
+<div class="row">
+    <div class="col text-center">
+        <p><span class="fw-bold">Win Probability:</span> {{ preds['red_win_prob'] }} <span class="fw-bold">Loss Probability:</span> {{ preds['red_lose_prob'] }}</p>
+        {% include red_shap %}
+    </div>
+    <div class="col text-center">
+        <p><span class="fw-bold">Win Probability:</span> {{ preds['blue_win_prob'] }} <span class="fw-bold"></span>Loss Probability:</span> {{ preds['blue_lose_prob'] }}</p>
+        {% include blue_shap %}
+    </div>
 </div>
 
 <!--
