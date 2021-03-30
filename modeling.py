@@ -47,9 +47,14 @@ def fight_df(red, blue, title_fight, sex, weight_class, venue):
 
     today = pd.to_datetime(datetime.datetime.today())
     red['age'] = today - red['born']
-    blue['age'] = today = blue['born']
+    blue['age'] = today - blue['born']
     red['years_active'] = today - red['debut']
     blue['years_active'] = today - blue['debut']
+    red['age'][0] = red['age'][0].days/365
+    blue['age'][0] = blue['age'][0].days/365
+    red['years_active'][0] = red['years_active'][0].days/365
+    blue['years_active'][0] = blue['years_active'][0].days/365
+    print(red['age'][0])
     if title_fight == 'on':
         title_fight = 1
     else:
@@ -82,7 +87,11 @@ def fight_df(red, blue, title_fight, sex, weight_class, venue):
 # Function to possibly impute and encode
 
 def encode_df(df):
+    print("----------------- PRE ENCODED --------------")
+    print(df)
     encoded = loaded_encoder.transform(df)
+    print("----------------- ENCODED ------------------")
+    print(encoded)
     return encoded
 
 def impute_df(df):

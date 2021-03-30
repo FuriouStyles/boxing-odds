@@ -45,17 +45,19 @@ def check_db_for_models(fight_odds):
             WHERE fight_id='{}'
     """
     fight_odds['modeled'] = None
+    fight_odds['modeled_bool'] = None
     red = fight_odds['Fighter'][0]
     blue = fight_odds['Fighter'][1]
     fight_id = fight_odds['fight_id'][0]
-    print(curs.execute(read_query.format(fight_id)).fetchone())
     for i in range(len(fight_odds)):
         result = curs.execute(query.format(fight_id)).fetchone()
         if result == None:
             fight_odds['modeled'] = create_button.format(fight_id, fight_odds.at[i, 'Date'], fight_odds.at[i, 'Time'], red, blue)
+            fight_odds['modeled_bool'] = False
         else:
             # fight_odds['modeled'] = view_model_button.format(fight_odds.at[i, 'fight_id'])
             fight_odds.at[i, 'modeled'] = curs.execute(read_query.format(fight_id)).fetchone()[i]
+            fight_odds['modeled_bool'] = True
     conn.close()
     
     return fight_odds
@@ -67,7 +69,6 @@ def odds_to_db(fight, fighterID=000000):
     Input: A Pandas DataFrame containing the odds both fighters for a single fight
     Output: None
     """
-    ### Think about putting this behind a try/except for error handling
     conn = sqlite3.connect(db)
     curs = conn.cursor()
 
@@ -150,7 +151,6 @@ def fights_to_db(fight_id, red, blue, weight_class, venue, date, time, sex, titl
                         AND blue='{blue}' 
                         AND date='{date}'""").fetchone()
     if query == None:
-        print('FIGHT to db write here')
         write_query = f"""
             INSERT INTO fights (
                 fight_id,
@@ -207,7 +207,6 @@ def fighter_to_db(fighter):
             """).fetchone()
 
     if query == None:
-        print('fighter is here')
         fighter[['br_id',
                  'born',
                  'division',
@@ -228,7 +227,6 @@ def fighter_to_db(fighter):
 
 def pred_to_db(pred_df):
     conn = sqlite3.connect(db)
-    print(pred_df)
     pred_df.to_sql('model_pred', con=conn, index=False, if_exists='append')
     conn.close()
     return
@@ -250,7 +248,6 @@ def get_fighter(fighter):
             WHERE br_id='{}'
     """
     curs = conn.cursor()
-    print(curs.execute(read_query.format(fighter)).fetchone)
     fighter = pd.read_sql(read_query.format(fighter), con=conn)
     conn.close()
     return fighter
@@ -264,5 +261,3 @@ def get_fight_details(fightid):
     fight = pd.read_sql(read_query.format(fightid), con=conn)
     conn.close()
     return fight
-
-print('dafuq is this shit')

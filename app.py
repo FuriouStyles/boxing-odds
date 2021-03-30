@@ -24,7 +24,7 @@ def create_app():
             html = table.to_dict('list')
             html_tables.append(html)
             # db_handler.odds_to_db(table)
-            table.drop(labels=['Time', 'Date', 'modeled'], axis=1).to_sql('fight_odds', con=conn, index=False, if_exists='append')
+            table.drop(labels=['Time', 'Date', 'modeled', 'modeled_bool'], axis=1).to_sql('fight_odds', con=conn, index=False, if_exists='append')
         conn.close()
         ### TODO: write the odds data to the database
         return render_template('home.html', odds_tables=html_tables)
@@ -46,7 +46,7 @@ def create_app():
 
     @application.route('/fight_deets', methods=['GET', 'POST'])
     def fight_deets():
-        if request.args.get('modeled') == 'False':
+        if (request.method == 'POST'):
             fight_id = request.form.get('fight-id')
             red_id = request.form.get('red-br-id')
             red = request.form.get('red-name')
@@ -76,6 +76,12 @@ def create_app():
             blue_wins = request.form.get('blue-wins')
             blue_losses = request.form.get('blue-losses')
             blue_draws = request.form.get('blue-draws')
+
+            print(f"FIGHT DATE: {date}")
+            print(f"RED BORN: {red_born}")
+            print(f"RED DEBUT: {red_debut}")
+            print(f"BLUE BORN: {blue_born}")
+            print(f"BLUE DEBUT: {blue_debut}")
 
             red = modeling.fighter_df(red_id, red, red_born,
                                     weight_class, red_height, red_nationality, red_debut,
