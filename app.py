@@ -80,8 +80,8 @@ def create_app():
             print(f"FIGHT DATE: {date}")
             print(f"RED BORN: {red_born}")
             print(f"RED DEBUT: {red_debut}")
-            print(f"BLUE BORN: {blue_born}")
-            print(f"BLUE DEBUT: {blue_debut}")
+            print(f"BLUE BORN: {blue_born}, OF TYPE: {type(blue_born)}")
+            print(f"BLUE DEBUT: {blue_debut}, OF TYPE: {type(blue_born)}")
 
             red = modeling.fighter_df(red_id, red, red_born,
                                     weight_class, red_height, red_nationality, red_debut,

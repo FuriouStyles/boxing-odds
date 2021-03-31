@@ -11,13 +11,13 @@ import db_handler
 import matplotlib.pyplot as plt
 import re
 
-imputer = 'static/knn_imputer.sav'
-model = 'static/xgb_model_v3.sav'
-encoder = 'static/cat_boost_encoder.sav'
+imputer = 'static/imputer.sav'
+model = 'static/xgb_model_v4-3.sav'
+# encoder = 'static/cat_boost_encoder.sav'
 
 loaded_imputer = joblib.load(imputer)
 loaded_model = joblib.load(model)
-loaded_encoder = joblib.load(encoder)
+# loaded_encoder = joblib.load(encoder)
 
 explainer = shap.Explainer(loaded_model)
 
@@ -32,8 +32,14 @@ def fighter_df(br_id, name, born, division, height,
     df = pd.DataFrame(data=[[br_id, name, born, division, height,
                 nationality, debut, reach, stance, wins, losses, draws]], columns=labels)
 
-    df['born'] = pd.to_datetime(born) # may need to use the df call instead of the func param?
-    df['debut'] = pd.to_datetime(debut) # same
+    if born == '':
+        df['born'] = np.nan
+    else:
+        df['born'] = pd.to_datetime(born)
+    if debut == '':
+        df['debut'] = np.nan
+    else:
+        df['debut'] = pd.to_datetime(debut) # same
 
     return df
     
@@ -44,17 +50,38 @@ def fight_df(red, blue, title_fight, sex, weight_class, venue):
     'red_nationality', 'blue_nationality', 'red_reach', 'blue_reach', 'red_stance', 'blue_stance', 'red_age',
     'blue_age', 'red_years_active', 'blue_years_active', 'red_wins', 'red_losses', 'red_draws', 'blue_wins',
     'blue_losses', 'blue_draws']
+    print(f"BLUE BORN IN FIGHT_DF: {blue['born'][0]}, OF TYPE: {type(blue['born'][0])}")
+    
+    red['age'] = None
+    blue['age'] = None
+    red['years_active'] = None
+    blue['years_active'] = None
 
     today = pd.to_datetime(datetime.datetime.today())
-    red['age'] = today - red['born']
-    blue['age'] = today - blue['born']
-    red['years_active'] = today - red['debut']
-    blue['years_active'] = today - blue['debut']
-    red['age'][0] = red['age'][0].days/365
-    blue['age'][0] = blue['age'][0].days/365
-    red['years_active'][0] = red['years_active'][0].days/365
-    blue['years_active'][0] = blue['years_active'][0].days/365
-    print(red['age'][0])
+    if pd.isnull(red['born'][0]) == True:
+        red['age'] == np.nan
+    else:
+        red['age'] = today - red['born']
+        red['age'][0] = red['age'][0].days/365
+
+    if pd.isnull(blue['born'][0]) == True:
+        blue['age'] == np.nan
+    else:
+        blue['age'] = today - blue['born']
+        blue['age'][0] = blue['age'][0].days/365
+
+    if pd.isnull(red['debut'][0]) == True:
+        red['years_active'] = np.nan
+    else:
+        red['years_active'] = today - red['debut']
+        red['years_active'][0] = red['years_active'][0].days/365
+
+    if pd.isnull(blue['debut'][0]) == True:
+        blue['years_active'] = np.nan
+    else:
+        blue['years_active'] = today - blue['debut']
+        blue['years_active'][0] = blue['years_active'][0].days/365
+    
     if title_fight == 'on':
         title_fight = 1
     else:
@@ -75,9 +102,11 @@ def fight_df(red, blue, title_fight, sex, weight_class, venue):
     df['blue_years_active'] = pd.to_numeric(df['blue_years_active'], errors='coerce')
     df['red_division'] = weight_class
     df['blue_division'] = weight_class
+    df.drop(labels=['red_age', 'blue_age'], axis=1, inplace=True)
 
+    
     df = df.replace(r'^\s*$', np.NaN, regex=True)
-    print(df.T)
+    
     # df['title_fight'] = 1 if title_fight is 'on' else 0
    
     # df['red_stance'] = [1 if stance == 'orthodox' else 2 if stance == 'southpaw' else np.nan for stance in df['red_stance']]
@@ -87,28 +116,86 @@ def fight_df(red, blue, title_fight, sex, weight_class, venue):
 # Function to possibly impute and encode
 
 def encode_df(df):
-    print("----------------- PRE ENCODED --------------")
-    print(df)
-    encoded = loaded_encoder.transform(df)
-    print("----------------- ENCODED ------------------")
-    print(encoded)
-    return encoded
+    nations = joblib.load('static/nations.sav')
+    venues = joblib.load('static/venues.sav')
+    divisions = joblib.load('static/weight_classes.sav')
+
+    df['red_nationality'] = nations[df.at[0,'red_nationality']]
+    df['blue_nationality'] = nations[df.at[0,'blue_nationality']]
+    df['red_division'] = divisions[df.at[0,'red_division']]
+    df['blue_division'] = divisions[df.at[0,'blue_division']]
+    try:
+        df['venue'] = venues[df.at[0, 'venue']]
+    except:
+        df['venue'] = np.nan
+    print("----------- POST ENCODING ------------")
+    print(df.T)
+
+    # df.drop(labels=['weight_class'], inplace=True)
+    return df
 
 def impute_df(df):
+    red_features = ['red_br_id',
+                    'red_division',
+                    'red_height',
+                    'red_nationality',
+                    'red_reach',
+                    'red_stance',
+                    'red_age_at_fight_time',
+                    'red_years_active',
+                    'red_wins',
+                    'red_losses',
+                    'red_draws']
+
+    blue_features = ['blue_br_id',
+                     'blue_division',
+                     'blue_height',
+                     'blue_nationality',
+                     'blue_reach',
+                     'blue_stance',
+                     'blue_age_at_fight_time',
+                     'blue_years_active',
+                     'blue_wins',
+                     'blue_losses',
+                     'blue_draws']
+
+    constant_features = ['title_fight',
+                         'venue',
+                         'sex']
+
+    red_imputer = joblib.load('static/red_imputer.sav')
+    blue_imputer = joblib.load('static/blue_imputer.sav')
+
+    red_slice = df[red_features]
+    red_imputed = red_imputer.transform(red_slice)
+
+    blue_slice = df[blue_features]
+    blue_imputed = blue_imputer.transform(blue_slice)
+
+    df[red_features] = red_imputed
+    df[blue_features] = blue_imputed
+    
+    print("----------- POST CORNER IMPUTING ------------")
+    print(df.T)
+    # print(df.columns.to_list())
+
     imputed = loaded_imputer.transform(df)
+    print("----------- POST FULL IMPUTING ------------")
+    print(df.T)
     return imputed
 
 # # return predict_proba
 
 def prediction(df):
     key = str(df['red_br_id'][0]) + str(df['blue_br_id'][0])
-    missing_encoder_cols = [x for x in loaded_encoder.get_feature_names() if x not in loaded_model.get_booster().feature_names]
-    df[missing_encoder_cols] = None
+    # missing_encoder_cols = [x for x in loaded_encoder.get_feature_names() if x not in loaded_model.get_booster().feature_names]
+    # df[missing_encoder_cols] = None
     encoded = encode_df(df)
     imputed = impute_df(encoded)
-    fight = pd.DataFrame(imputed, columns=loaded_encoder.get_feature_names())
-    fight = fight[loaded_model.get_booster().feature_names]
-
+    assert len(df.columns.to_list()) == len(loaded_model.get_booster().feature_names)
+    # fight = pd.DataFrame(imputed, columns=loaded_model.get_booster().feature_names)
+    fight = df[loaded_model.get_booster().feature_names]
+    # print(fight.T)
     probas = loaded_model.predict_proba(fight)
     html = get_shap_force(fight, explainer, key)
 
